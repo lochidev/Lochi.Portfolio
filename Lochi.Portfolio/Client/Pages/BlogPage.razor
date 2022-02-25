@@ -1,0 +1,57 @@
+﻿@page "/blogPage/{blogName?}"
+@using Lochi.Portfolio.Shared
+@using Markdig
+@inject IHttpClientFactory clientFactory
+@inject NavigationManager NavigationManager
+<div class="space-y-4 p-10">
+    <h1 class="text-blue-500 font-bold text-4xl pt-4">What's this? A blog? 🥱</h1>
+    @if (BlogName is null)
+    {
+        @if (BlogSummaries == null)
+        {
+            <h2 class="text-blue-500 font-bold text-3xl pt-4">Sorry, no blogs here at the moment, check back later ��</h2>
+        }
+        else
+        {
+            <PageTitle>Lochi's Boring Blog 🥱</PageTitle>
+            @foreach (var blog in BlogSummaries)
+            {
+                <h3 class="text-blue-500 font-bold text-2xl pt-4" @onclick="() => GoToBlog(blog.Title)">@blog.Title</h3>
+            }
+        }
+    }
+    else
+    {
+        if (CurrentBlog is not null)
+        {
+            <PageTitle>@CurrentBlog.Title 💙</PageTitle>
+            <h1>You are reading: @CurrentBlog.Title</h1>
+            <div>
+                @((MarkupString)Markdown.ToHtml(CurrentBlog.Content))
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? BlogName { get; set; }
+    private Blog? CurrentBlog;
+    private HashSet<BlogSummary>? BlogSummaries;
+    private void GoToBlog(string value)
+    {
+        NavigationManager.NavigateTo($"blogPage/{value}");
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        var client = clientFactory.CreateClient("Lochi.Portfolio.ServerAPI.Public");
+        if (BlogName is not null)
+        {
+            CurrentBlog ??= await client.GetFromJsonAsync<Blog>($"Api/Blog/GetBlog/{BlogName}");
+        }
+        else
+        {
+            BlogSummaries ??= await client.GetFromJsonAsync<HashSet<BlogSummary>>("Api/Blog/GetFeed");
+        }
+    }
+}

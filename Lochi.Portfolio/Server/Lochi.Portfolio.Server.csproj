@@ -1,0 +1,94 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>Lochi.Portfolio.Server-58742A78-5D1B-4D97-85CB-453523E9D9D5</UserSecretsId>
+		<WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Include="Blogs\Videos\AND_no_audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Blogs\Videos\basic_electronics_no_audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Blogs\Videos\buffer-no-audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Blogs\Videos\inverter_no_audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Blogs\Videos\XOR-no-audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Client\Lochi.Portfolio.Client.csproj" />
+		<ProjectReference Include="..\Shared\Lochi.Portfolio.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" NoWarn="NU1605" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.2" NoWarn="NU1605" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="1.23.0" />
+		<PackageReference Include="Microsoft.Identity.Web.UI" Version="1.23.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="wwwroot\css\app.css">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="wwwroot\images\electronics_101\XOR.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="wwwroot\images\electronics_101\XOR_incomplete.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Blogs\Feed\Electronics 101.md">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Blogs\Videos\AND_no_audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Blogs\Videos\basic_electronics_no_audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Blogs\Videos\buffer-no-audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Blogs\Videos\inverter_no_audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Blogs\Videos\XOR-no-audio.mp4">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	<Target Name="CheckForNpm" BeforeTargets="NpmInstall">
+		<Exec Command="npm -v" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+		<Error Condition="'$(ErrorCode)' != '0'" Text="You must install NPM to build this project" />
+	</Target>
+
+	<Target Name="NpmInstall" BeforeTargets="BuildCSS" Inputs="package.json" Outputs="$(NpmLastInstall)">
+		<Exec Command="npm install" />
+		<Touch Files="$(NpmLastInstall)" AlwaysCreate="true" />
+	</Target>
+
+	<Target Name="BuildCSS" BeforeTargets="Compile">
+		<Exec Command="npm run buildcss:dev" Condition=" '$(Configuration)' == 'Debug' " />
+		<Exec Command="npm run buildcss:release" Condition=" '$(Configuration)' == 'Release' " />
+	</Target>
+
+</Project>

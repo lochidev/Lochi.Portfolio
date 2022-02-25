@@ -1,0 +1,79 @@
+﻿@page "/about"
+<PageTitle>About me 😀</PageTitle>
+<div class="space-y-4 p-10">
+    <h1 class="text-blue-500 font-bold text-4xl pt-4">Lochi 101</h1>
+
+    <h2 class="text-blue-600 font-bold text-2xl pt-8">
+        Hi there! I'm lochi, @CalculateAge() years old, and this is supposed to be my portfolio.
+        I code in C#, C and C++, though most of the time I'm on dotnet. Infact this site
+        is running on dotnet too. It is built with blazor webassembly and tailwindcss, and is hopefully prerenderd as
+        well 😁. And yes you guessed it, I'm not a javascript guy at all (unfortunately ?).
+        I've meddled a bit with x86 assembly too during my os dev endavours. I do love the microservice way of doing things but I am not experienced 
+        with stuff like kubernetes, I'm hoping to pick it up at work someday.
+        So uh, ig I'll put a list down below with what I'm experienced
+        with
+    </h2>
+    <ul class="pl-5 list-decimal list-outside text-blue-600 font-bold text-2xl pt-8">
+        <li>
+            .NET and C-hashtag 😏
+            <ul class="list-disc list-inside">
+                <li>
+                    Anything ASP.NET Core related, there's a good chance I was already there (Blazor, MVC, WebAPI, gRPC and the list goes on) 😍 
+                </li>
+                <li>
+                    Entity Framework Core with Postgres and Cosmos Db providers (this has spoiled all my SQL skills 😢)😎
+                </li>
+                <li>
+                    Xamarin with that MVVM goodness (tbh, I wasn't really a fan of native dev,
+                    hoping to get on board the MAUI train on GA) 🚅
+                </li>
+            </ul>
+        </li>
+        <li>
+            Azure (I was fortunate enough to grab that juicy 1 year long 
+            azure for students subscription with $100 credit
+            through the github student developer pack programme) 🤑
+            <ul class="list-disc list-inside">
+                <li>Experience handling an Azure VM running Debian 11 🙌</li>
+                <li>Cosmos DB free tier experience although I swtched to postgres anyway 🤣</li>
+                <li>Used azure key vault in my <a class="underline" href="https://github.com/lochidev/dinglethebotreboot">
+                    discord bot</a> and other projects 👀</li>
+                <li>Experience with azure timed trigger functions and speaking of which CRON jobs ⚡</li>
+                <li>Vague experience with Azure AD and the Microsoft identity platform 👌</li>
+            </ul>
+        </li>
+        <li>
+            C, C++ and Assembly 🤤
+            <ul class="list-disc list-inside">
+                <li>I managed to make my own <a class="underline" href="https://github.com/lochidev/spartanpenguinOS">32-bit 
+                    operating system</a> (ring 0, protected mode)
+                    with my own bootloader using C and x86 Assembly🐱‍👤</li>
+                <li>Managed to switch to user mode in this new <a class="underline" href="https://github.com/lochidev/spfr64uefi">
+                    64-bit OS</a> i'm working on with C++ 🐱‍🚀</li>
+                <li>Experience dealing with windows specific stuff like Win32 API, DirectX 11, COM using C++
+                    ⚡
+                </li>
+            </ul>
+        </li>
+        <li>
+            Development Environment + Tooling 🥱
+            <ul class="list-disc list-inside">
+                <li>I develop on windows but I'm familiar using debian on servers and WSL 🐧</li>
+                <li>Visual Studio 2022 and Jetbrains Rider for C#, VSCode for mostly everything else 🙃</li>
+                <li>Where do I store my data? Postgres! I use redis for distributed caching (☞ﾟヮﾟ)☞</li>
+                <li>I'm the type of person that is lazy to learn how to use new tools, but I'm pretty confident 
+                    that I can pick up anything I need relatively quickly so yeah ☜(ﾟヮﾟ☜) </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3 class="text-blue-600 font-bold text-xl pt-8">Still here? Here's a random GIF 👋</h3>
+    <img class="p-1" src="https://c.tenor.com/rqJigJfNUBgAAAAC/the-simpsons-homer-simpson.gif"/>
+</div>
+@code {
+    private int CalculateAge()
+    {
+        var dateTimeNow = DateTime.UtcNow;
+        return dateTimeNow.Year - (dateTimeNow.Month < 5 ? 2004 : 2003);
+    }
+}
