@@ -81,9 +81,8 @@
 		<Error Condition="'$(ErrorCode)' != '0'" Text="You must install NPM to build this project" />
 	</Target>
 
-	<Target Name="NpmInstall" BeforeTargets="BuildCSS" Inputs="package.json" Outputs="$(NpmLastInstall)">
+	<Target Name="NpmInstall" BeforeTargets="BuildCSS">
 		<Exec Command="npm install" />
-		<Touch Files="$(NpmLastInstall)" AlwaysCreate="true" />
 	</Target>
 
 	<Target Name="BuildCSS" BeforeTargets="Compile">
