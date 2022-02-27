@@ -15,10 +15,7 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- uses: actions/checkout@v2
-- uses: actions/setup-node@v2
-  with:
-    node-version: '14'
+- task: NodeTool@0
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
