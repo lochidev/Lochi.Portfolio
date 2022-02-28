@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
+  solution: 'Lochi.Portfolio/Server/Lochi.Portfolio.Server.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
