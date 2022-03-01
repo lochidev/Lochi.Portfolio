@@ -16,7 +16,8 @@ jobs:
    steps:
    - task: NodeTool@0
      inputs:
-       checkLatest: true
+      versionSpec: >=16.3.0
+      checkLatest: true
    - task: NuGetToolInstaller@1
    - task: UseDotNet@2
      displayName: 'Install .NET Core SDK'
