@@ -30,16 +30,15 @@ jobs:
       arguments: '-c $(buildConfiguration)'
       projects: '$(solution)'
       
-   - task: ArchiveFiles@2 
-     displayName: 'Archive files'
+   - task: ArchiveFiles@2
      inputs:
-      rootFolderOrFile: 'Lochi.Portfolio/Server/bin/Release/net6.0/publish/'
-      includeRootFolder: false
-      archiveType: zip
-      archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      replaceExistingArchive: true
+       rootFolderOrFile: 'Lochi.Portfolio\Server\bin\Release\net6.0\publish'
+       includeRootFolder: true
+       archiveType: 'zip'
+       archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+       replaceExistingArchive: true
 
-   - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+   - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
      artifact: drop
 
  - deployment: VMDeploy
