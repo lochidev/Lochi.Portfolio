@@ -18,18 +18,12 @@ jobs:
      inputs:
       versionSpec: '>=16.3.0'
       checkLatest: true
-   - task: NuGetToolInstaller@1
    - task: UseDotNet@2
      displayName: 'Install .NET Core SDK'
      inputs:
       version: 6.0.x
       performMultiLevelLookup: true
       includePreviewVersions: true # Required for preview versions
-   - task: DotNetCoreCLI@2
-     displayName: Restore
-     inputs:
-      command: restore
-      projects: '$(solution)'
    - task: DotNetCoreCLI@2
      inputs:
       command: 'publish'
@@ -39,7 +33,7 @@ jobs:
    - task: ArchiveFiles@2 
      displayName: 'Archive files'
      inputs:
-      rootFolderOrFile: 'Lochi.Portfolio/Server/bin/Release/net6.0/publish'
+      rootFolderOrFile: 'Lochi.Portfolio/Server/bin/Release/net6.0/publish/'
       includeRootFolder: false
       archiveType: zip
       archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
