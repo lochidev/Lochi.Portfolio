@@ -13,41 +13,42 @@ variables:
   solution: 'Lochi.Portfolio/Server/Lochi.Portfolio.Server.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-
-steps:
-- task: NodeTool@0
-- task: NuGetToolInstaller@1
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK'
-  inputs:
+jobs:
+ job: 'Prepare'
+ steps:
+ - task: NodeTool@0
+ - task: NuGetToolInstaller@1
+ - task: UseDotNet@2
+   displayName: 'Install .NET Core SDK'
+   inputs:
     version: 6.0.x
     performMultiLevelLookup: true
     includePreviewVersions: true # Required for preview versions
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
+ - task: DotNetCoreCLI@2
+   displayName: Restore
+   inputs:
     command: restore
     projects: '$(solution)'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(buildConfiguration)'
-    projects: '$(solution)'
-  displayName: 'dotnet build $(buildConfiguration)'
-- task: ArchiveFiles@2 
-  displayName: 'Archive files'
-  inputs:
+ - task: DotNetCoreCLI@2
+   inputs:
+      command: 'build'
+      arguments: '--configuration $(buildConfiguration)'
+      projects: '$(solution)'
+      
+ - task: ArchiveFiles@2 
+   displayName: 'Archive files'
+   inputs:
       rootFolderOrFile: 'Lochi.Portfolio/Server/bin/Release/net6.0/publish'
       includeRootFolder: false
       archiveType: zip
       archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       replaceExistingArchive: true
-- upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-  artifact: drop
-  
-jobs: 
+
+ - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      artifact: drop
+ job: 'Deploy'
  - deployment: VMDeploy
-   displayName: vmdeploy
+   displayName: web
    environment:
     name: vm
     resourceType: VirtualMachine
