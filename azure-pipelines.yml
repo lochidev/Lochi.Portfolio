@@ -47,7 +47,7 @@ steps:
   
 jobs: 
  - deployment: VMDeploy
-   displayName: web
+   displayName: vmdeploy
    environment:
     name: vm
     resourceType: VirtualMachine
