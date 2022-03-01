@@ -29,13 +29,13 @@ jobs:
       command: 'publish'
       arguments: '-c $(buildConfiguration)'
       projects: '$(solution)'
-      
+
    - task: PowerShell@2
      displayName: 'Inline Powershell'
      inputs:
       TargetType: inline
       Script: |
-        Compress-Archive -Path "Lochi.Portfolio\Server\bin\Release\net6.0\publish" -DestinationPath "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+        Compress-Archive -Path "$(Build.SourcesDirectory)/Lochi.Portfolio/Server/bin/Release/net6.0/publish" -DestinationPath "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
       pwsh: true
    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
      artifact: drop
