@@ -52,6 +52,7 @@ jobs:
     name: vm
     resourceType: VirtualMachine
     tags: lochi.destroyer
+    resourceName: lochi
    strategy:
     runOnce:
       deploy:
