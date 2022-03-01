@@ -16,7 +16,7 @@ jobs:
    steps:
    - task: NodeTool@0
      inputs:
-      versionSpec: >=16.3.0
+      versionSpec: '>=16.3.0'
       checkLatest: true
    - task: NuGetToolInstaller@1
    - task: UseDotNet@2
