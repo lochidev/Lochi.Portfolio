@@ -1,62 +1,61 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
-trigger:
-- main
-
-pool:
-  vmImage: 'windows-latest'
-
-variables:
-  solution: 'Lochi.Portfolio/Server/Lochi.Portfolio.Server.csproj'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-jobs:
- job: 'Prepare'
- steps:
- - task: NodeTool@0
- - task: NuGetToolInstaller@1
- - task: UseDotNet@2
-   displayName: 'Install .NET Core SDK'
-   inputs:
-    version: 6.0.x
-    performMultiLevelLookup: true
-    includePreviewVersions: true # Required for preview versions
- - task: DotNetCoreCLI@2
-   displayName: Restore
-   inputs:
-    command: restore
-    projects: '$(solution)'
- - task: DotNetCoreCLI@2
-   inputs:
-      command: 'build'
-      arguments: '--configuration $(buildConfiguration)'
-      projects: '$(solution)'
-      
- - task: ArchiveFiles@2 
-   displayName: 'Archive files'
-   inputs:
-      rootFolderOrFile: 'Lochi.Portfolio/Server/bin/Release/net6.0/publish'
-      includeRootFolder: false
-      archiveType: zip
-      archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      replaceExistingArchive: true
-
- - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+pool: 
+  vmImage: windows-latest
+trigger: 
+  - main
+variables: 
+  buildConfiguration: Release
+  buildPlatform: "Any CPU"
+  solution: Lochi.Portfolio/Server/Lochi.Portfolio.Server.csproj
+jobs: 
+  job: Prepare
+  steps: 
+    - 
+      task: NodeTool@0
+    - 
+      task: NuGetToolInstaller@1
+    - 
+      displayName: "Install .NET Core SDK"
+      inputs: 
+        includePreviewVersions: true
+        performMultiLevelLookup: true
+        version: 6.0.x
+      task: UseDotNet@2
+    - 
+      displayName: Restore
+      inputs: 
+        command: restore
+        projects: $(solution)
+      task: DotNetCoreCLI@2
+    - 
+      inputs: 
+        arguments: "--configuration $(buildConfiguration)"
+        command: build
+        projects: $(solution)
+      task: DotNetCoreCLI@2
+    - 
+      displayName: "Archive files"
+      inputs: 
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        archiveType: zip
+        includeRootFolder: false
+        replaceExistingArchive: true
+        rootFolderOrFile: Lochi.Portfolio/Server/bin/Release/net6.0/publish
+      task: ArchiveFiles@2
+    - 
       artifact: drop
-
- - deployment: VMDeploy
-   displayName: web
-   environment:
-    name: vm
-    resourceType: VirtualMachine
-    tags: lochi.destroyer
-    resourceName: lochi
-   strategy:
-    runOnce:
-      deploy:
-        steps:
-        - script: echo my first deployment
+      upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    - 
+      deployment: VMDeploy
+      displayName: web
+      environment: 
+        name: vm
+        resourceName: lochi
+        resourceType: VirtualMachine
+        tags: lochi.destroyer
+      strategy: 
+        runOnce: 
+          deploy: 
+            steps: 
+              - 
+                script: "echo my first deployment"
 
