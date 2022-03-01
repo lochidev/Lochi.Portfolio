@@ -5,16 +5,14 @@
 
 trigger:
 - main
-
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   solution: 'Lochi.Portfolio/Server/Lochi.Portfolio.Server.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 jobs:
  job: 'Prepare'
+ pool:
+  vmImage: 'windows-latest'
  steps:
  - task: NodeTool@0
  - task: NuGetToolInstaller@1
@@ -49,6 +47,8 @@ jobs:
 
  - deployment: VMDeploy
    displayName: web
+   pool:
+    vmImage: 'windows-latest'
    environment:
     name: vm
     resourceType: VirtualMachine
