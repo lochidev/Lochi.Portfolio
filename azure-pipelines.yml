@@ -15,6 +15,8 @@ jobs:
  - job: Prepare
    steps:
    - task: NodeTool@0
+     inputs:
+       checkLatest: true
    - task: NuGetToolInstaller@1
    - task: UseDotNet@2
      displayName: 'Install .NET Core SDK'
@@ -29,8 +31,8 @@ jobs:
       projects: '$(solution)'
    - task: DotNetCoreCLI@2
      inputs:
-      command: 'build'
-      arguments: '--configuration $(buildConfiguration)'
+      command: 'publish'
+      arguments: '-c $(buildConfiguration)'
       projects: '$(solution)'
       
    - task: ArchiveFiles@2 
