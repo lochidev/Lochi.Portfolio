@@ -4,7 +4,7 @@
     <h1 class="text-blue-500 font-bold text-4xl pt-4">Lochi 101</h1>
 
     <h2 class="text-blue-600 font-bold text-2xl pt-8">
-        Hi there! I'm lochi, @CalculateAge() years old, and this is supposed to be my portfolio.
+        Hi there! I'm lochi, @CalculateAge() years old (2003, May, 02 🎂), and this is supposed to be my portfolio.
         I code in C#, C and C++, though most of the time I'm on dotnet. Infact this site
         is running on dotnet too. It is built with blazor webassembly and tailwindcss, and is hopefully prerenderd as
         well 😁. And yes you guessed it, I'm not a javascript guy at all (unfortunately ?).
@@ -71,9 +71,10 @@
     <img class="p-1" src="https://c.tenor.com/rqJigJfNUBgAAAAC/the-simpsons-homer-simpson.gif"/>
 </div>
 @code {
-    private int CalculateAge()
+    private string CalculateAge()
     {
         var dateTimeNow = DateTime.UtcNow;
-        return dateTimeNow.Year - (dateTimeNow.Month < 5 ? 2004 : 2003);
+        var age = dateTimeNow.Year - 2003;
+        return dateTimeNow.Month < 5 ? $"almost {age}" : age.ToString();
     }
 }

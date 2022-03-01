@@ -1,5 +1,4 @@
 ﻿using Lochi.Portfolio.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System.Text;
@@ -24,18 +23,18 @@ namespace Lochi.Portfolio.Server.Controllers
             HashSet<BlogSummary> result = _cache.Get<HashSet<BlogSummary>>("currentFeed");
             if (result is null)
             {
-                var feedPath = Path.Combine("Blogs", "Feed");
-                var files = Directory.GetFiles(feedPath);
+                string? feedPath = Path.Combine("Blogs", "Feed");
+                string[]? files = Directory.GetFiles(feedPath);
                 result = new HashSet<BlogSummary>();
-                foreach (var file in files)
+                foreach (string? file in files)
                 {
-                    var fileInfo = new FileInfo(file);
+                    FileInfo? fileInfo = new FileInfo(file);
                     StringBuilder summary = new();
                     using (StreamReader sr = fileInfo.OpenText())
                     {
                         for (int i = 0; i < 3; i++)
                         {
-                            var s = sr.ReadLine();
+                            string? s = sr.ReadLine();
                             if (s is not null)
                             {
                                 if (i != 0)
@@ -63,10 +62,14 @@ namespace Lochi.Portfolio.Server.Controllers
             Blog blog = _cache.Get<Blog>(blogName);
             if (blog is null)
             {
-                var files = Directory.GetFiles("Blogs", blogName + ".md", SearchOption.AllDirectories);
-                if (files.Length == 0) return NotFound();
-                var file = files[0];
-                var fileInfo = new FileInfo(file);
+                string[]? files = Directory.GetFiles("Blogs", blogName + ".md", SearchOption.AllDirectories);
+                if (files.Length == 0)
+                {
+                    return NotFound();
+                }
+
+                string? file = files[0];
+                FileInfo? fileInfo = new FileInfo(file);
                 blog = new Blog(blogName, string.Empty, fileInfo.LastWriteTimeUtc, System.IO.File.ReadAllText(file));
                 _cache.Set(blogName, blog, TimeSpan.FromHours(1));
             }
@@ -76,7 +79,7 @@ namespace Lochi.Portfolio.Server.Controllers
         [Route("VideoPlayback")]
         public IActionResult VideoPlayback([FromQuery] string fileName)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Blogs", "Videos", fileName);
+            string? filePath = Path.Combine(Directory.GetCurrentDirectory(), "Blogs", "Videos", fileName);
             if (System.IO.File.Exists(filePath))
             {
                 return PhysicalFile(filePath, "application/octet-stream", enableRangeProcessing: true);

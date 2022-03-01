@@ -1,5 +1,5 @@
 ﻿<!-- mobile menu bar -->
-@inject SignOutSessionStateManager SignOutManager
+@*@inject SignOutSessionStateManager SignOutManager*@
 @inject NavigationManager Navigation
 <div class="bg-gray-800 text-gray-100 flex justify-between md:hidden">
 	<!-- logo -->
@@ -68,11 +68,11 @@
 	{
 		collapse = !collapse;
 	}
-	private async Task BeginSignOut(MouseEventArgs args)
-	{
-		await SignOutManager.SetSignOutState();
-		Navigation.NavigateTo("authentication/logout");
-	}
+	//private async Task BeginSignOut(MouseEventArgs args)
+	//{
+	//	await SignOutManager.SetSignOutState();
+	//	Navigation.NavigateTo("authentication/logout");
+	//}
 	private async Task FocusOut()
 	{
 		await Task.Delay(50);

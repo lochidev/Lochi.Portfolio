@@ -1,7 +1,5 @@
 using Lochi.Portfolio.Shared;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
 
 namespace Lochi.Portfolio.Server.Controllers
 {

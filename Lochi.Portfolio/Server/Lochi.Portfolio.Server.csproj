@@ -74,6 +74,10 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Services\" />
+	</ItemGroup>
 	<Target Name="CheckForNpm" BeforeTargets="NpmInstall">
 		<Exec Command="npm -v" ContinueOnError="true">
 			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
@@ -81,12 +85,14 @@
 		<Error Condition="'$(ErrorCode)' != '0'" Text="You must install NPM to build this project" />
 	</Target>
 
-	<Target Name="NpmInstall" BeforeTargets="BuildCSS">
+	<Target Name="NpmInstall" BeforeTargets="BuildCSS" Condition="'$(Configuration)' == 'Debug' ">
 		<Exec Command="npm install" />
 	</Target>
 
 	<Target Name="BuildCSS" BeforeTargets="Compile">
 		<Exec Command="npm run buildcss:dev" Condition=" '$(Configuration)' == 'Debug' " />
+		<Exec Command="npm cache clean --force" Condition=" '$(Configuration)' == 'Release' " />
+		<Exec Command="npm install" Condition=" '$(Configuration)' == 'Release' " />
 		<Exec Command="npm run buildcss:release" Condition=" '$(Configuration)' == 'Release' " />
 	</Target>
 
