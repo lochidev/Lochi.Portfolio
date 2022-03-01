@@ -46,7 +46,7 @@ jobs:
 
  - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       artifact: drop
- job: 'Deploy'
+
  - deployment: VMDeploy
    displayName: web
    environment:
