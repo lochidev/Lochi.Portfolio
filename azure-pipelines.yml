@@ -48,8 +48,6 @@ steps:
 jobs: 
  - deployment: VMDeploy
    displayName: web
-   pool:
-    vmImage: 'ubuntu-latest'
    environment:
     name: vm
     resourceType: VirtualMachine
