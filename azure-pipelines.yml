@@ -63,9 +63,16 @@ jobs:
               script: |
                 # Modify deployment script based on the app type
                 echo "Starting deployment script run"
-                #sudo java -jar '$(Pipeline.Workspace)/drop/**/target/*.jar'
-                cd $(Pipeline.Workspace)
+                cd $(Pipeline.Workspace)/drop
                 ls -r
+                unzip -o $(Build.BuildId).zip -d portfolio
+                rm $(Build.BuildId).zip
+                cd portfolio
+                ls
+                cd Server
+                bash $HOME/kill_portf.sh
+                nohup dotnet Lochi.Portfolio.Server.dll urls=http://localhost:6001 >/dev/null 2>&1 &
+                ls
         routeTraffic:
           steps:
           - script: echo routing traffic
