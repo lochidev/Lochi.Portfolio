@@ -11,43 +11,46 @@ variables:
   solution: 'Lochi.Portfolio/Server/Lochi.Portfolio.Server.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-jobs:
- - job: Prepare
-   steps:
-   - task: NodeTool@0
-     inputs:
-      versionSpec: '>=16.3.0'
-      checkLatest: true
-   - task: UseDotNet@2
-     displayName: 'Install .NET Core SDK'
-     inputs:
-      version: 6.0.x
-      performMultiLevelLookup: true
-      includePreviewVersions: true # Required for preview versions
-   - task: DotNetCoreCLI@2
-     inputs:
-      command: 'publish'
-      arguments: '-c $(buildConfiguration) -o $(Build.SourcesDirectory)\Lochi.Portfolio\Server\bin\Release\net6.0\publish'
-      projects: '$(solution)'
+stages:
+- stage: Prepare
+  jobs:
+   - job: Prepare
+     steps:
+     - task: NodeTool@0
+       inputs:
+        versionSpec: '>=16.3.0'
+        checkLatest: true
+     - task: UseDotNet@2
+       displayName: 'Install .NET Core SDK'
+       inputs:
+        version: 6.0.x
+        performMultiLevelLookup: true
+        includePreviewVersions: true # Required for preview versions
+     - task: DotNetCoreCLI@2
+       inputs:
+        command: 'publish'
+        arguments: '-c $(buildConfiguration) -o $(Build.SourcesDirectory)\Lochi.Portfolio\Server\bin\Release\net6.0\publish'
+        projects: '$(solution)'
 
-   - task: PowerShell@2
-     displayName: 'Inline Powershell'
-     inputs:
-      TargetType: inline
-      Script: |
-        Compress-Archive -Path "$(Build.SourcesDirectory)\Lochi.Portfolio\Server\bin\Release\net6.0\publish" -DestinationPath "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
-      pwsh: true
-   - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-     artifact: drop
-
- - deployment: VMDeploy
-   displayName: web
-   environment:
-    name: vm
-    resourceType: VirtualMachine
-    tags: lochi.destroyer
-    resourceName: lochi
-   strategy:
+     - task: PowerShell@2
+       displayName: 'Inline Powershell'
+       inputs:
+        TargetType: inline
+        Script: |
+         Compress-Archive -Path "$(Build.SourcesDirectory)\Lochi.Portfolio\Server\bin\Release\net6.0\publish" -DestinationPath "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+        pwsh: true
+     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+       artifact: drop
+- stage: Deploy
+  jobs:
+   - deployment: VMDeploy
+     displayName: web
+     environment:
+      name: vm
+      resourceType: VirtualMachine
+      tags: lochi.destroyer
+      resourceName: lochi
+     strategy:
       rolling:
         maxParallel: 2  #for percentages, mention as x%
         preDeploy:
