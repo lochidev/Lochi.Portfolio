@@ -27,7 +27,7 @@ jobs:
    - task: DotNetCoreCLI@2
      inputs:
       command: 'publish'
-      arguments: '-c $(buildConfiguration)'
+      arguments: '-c $(buildConfiguration) -o $(Build.SourcesDirectory)\Lochi.Portfolio\Server\bin\Release\net6.0\publish'
       projects: '$(solution)'
 
    - task: PowerShell@2
