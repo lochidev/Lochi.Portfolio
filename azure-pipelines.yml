@@ -11,52 +11,86 @@ variables:
   solution: 'Lochi.Portfolio/Server/Lochi.Portfolio.Server.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-jobs:
- - job: Prepare
-   steps:
-   - task: NodeTool@0
-     inputs:
-       checkLatest: true
-   - task: NuGetToolInstaller@1
-   - task: UseDotNet@2
-     displayName: 'Install .NET Core SDK'
-     inputs:
-      version: 6.0.x
-      performMultiLevelLookup: true
-      includePreviewVersions: true # Required for preview versions
-   - task: DotNetCoreCLI@2
-     displayName: Restore
-     inputs:
-      command: restore
-      projects: '$(solution)'
-   - task: DotNetCoreCLI@2
-     inputs:
-      command: 'publish'
-      arguments: '-c $(buildConfiguration)'
-      projects: '$(solution)'
-      
-   - task: ArchiveFiles@2 
-     displayName: 'Archive files'
-     inputs:
-      rootFolderOrFile: 'Lochi.Portfolio/Server/bin/Release/net6.0/publish'
-      includeRootFolder: false
-      archiveType: zip
-      archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      replaceExistingArchive: true
+stages:
+- stage: Prepare
+  jobs:
+   - job: Prepare
+     steps:
+     - task: NodeTool@0
+       inputs:
+        versionSpec: '>=16.3.0'
+        checkLatest: true
+     - task: UseDotNet@2
+       displayName: 'Install .NET Core SDK'
+       inputs:
+        version: 6.0.x
+        performMultiLevelLookup: true
+        includePreviewVersions: true # Required for preview versions
+     - task: DotNetCoreCLI@2
+       inputs:
+        command: 'publish'
+        arguments: '-c $(buildConfiguration) -o $(Build.SourcesDirectory)\Lochi.Portfolio\Server\bin\Release\net6.0\publish'
+        projects: '$(solution)'
 
-   - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-     artifact: drop
-
- - deployment: VMDeploy
-   displayName: web
-   environment:
-    name: vm
-    resourceType: VirtualMachine
-    tags: lochi.destroyer
-    resourceName: lochi
-   strategy:
-    runOnce:
-      deploy:
-        steps:
-        - script: echo my first deployment
+     - task: PowerShell@2
+       displayName: 'Inline Powershell'
+       inputs:
+        TargetType: inline
+        Script: |
+         Compress-Archive -Path "$(Build.SourcesDirectory)\Lochi.Portfolio\Server\bin\Release\net6.0\publish" -DestinationPath "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+        pwsh: true
+     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+       artifact: drop
+- stage: Deploy
+  jobs:
+   - deployment: VMDeploy
+     displayName: web
+     environment:
+      name: vm
+      resourceType: VirtualMachine
+      tags: lochi.destroyer
+      resourceName: lochi
+     strategy:
+      rolling:
+        maxParallel: 2  #for percentages, mention as x%
+        preDeploy:
+          steps:
+          - download: current
+            artifact: drop
+          - script: echo initialize, cleanup, backup, install certs
+        deploy:
+          steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Modify deployment script based on the app type
+                echo "Starting deployment script run"
+                cd $(Pipeline.Workspace)/drop
+                ls -r
+                unzip -o $(Build.BuildId).zip -d portfolio
+                rm $(Build.BuildId).zip
+                cd portfolio
+                ls
+                cd publish
+                ls
+                rm Client.zip
+                unzip -o Server.zip -d Server
+                cd Server
+                ls
+                bash $HOME/kill_portf.sh
+                nohup dotnet Lochi.Portfolio.Server.dll urls=http://localhost:6001 >/dev/null 2>&1 &
+        routeTraffic:
+          steps:
+          - script: echo routing traffic
+        postRouteTraffic:
+          steps:
+          - script: echo health check post-route traffic
+        on:
+          failure:
+            steps:
+            - script: echo Restore from backup! This is on failure
+          success:
+            steps:
+            - script: echo Notify! This is on success
 
