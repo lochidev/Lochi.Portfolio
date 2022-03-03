@@ -1,6 +1,5 @@
 # Lochi.Portfolio
-
-![Build Status](https://dev.azure.com/lochik/Lochi.Portfolio/_apis/build/status/lochidev.Lochi.Portfolio?branchName=main?)
+[![Build Status](https://dev.azure.com/lochik/Lochi.Portfolio/_apis/build/status/lochidev.Lochi.Portfolio?branchName=main)](https://dev.azure.com/lochik/Lochi.Portfolio/_build/latest?definitionId=1&branchName=main)
 
 
 
