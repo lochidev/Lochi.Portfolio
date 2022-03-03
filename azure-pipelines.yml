@@ -81,7 +81,7 @@ stages:
                 BOT_PROCESS=$(bash $HOME/get_process.sh [d]otnet Lochi.Portfolio.Server.dll)
                 kill -9 $BOT_PROCESS
                 printf "Killed bot with pId $BOT_PROCESS\n"
-                nohup dotnet Lochi.Portfolio.Server.dll urls=http://localhost:6001 >/dev/null 2>&1 &
+                nohup dotnet Lochi.Portfolio.Server.dll urls=http://localhost:6001 &
         routeTraffic:
           steps:
           - script: echo routing traffic
