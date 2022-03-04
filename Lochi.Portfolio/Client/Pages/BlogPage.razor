@@ -3,6 +3,7 @@
 @using Markdig
 @inject IHttpClientFactory clientFactory
 @inject NavigationManager NavigationManager
+@inject PersistentComponentState ApplicationState
 <div class="space-y-4 p-10">
     <h1 class="text-blue-500 font-bold text-4xl pt-4">What's this? A blog? 🥱</h1>
     @if (BlogName is null)
@@ -47,20 +48,34 @@
     public string? BlogName { get; set; }
     private Blog? CurrentBlog;
     private HashSet<BlogSummary>? BlogSummaries;
-    private void GoToBlog(string value)
-    {
-        NavigationManager.NavigateTo($"blogPage/{value}");
-    }
     protected override async Task OnParametersSetAsync()
     {
+
         var client = clientFactory.CreateClient("Lochi.Portfolio.ServerAPI.Public");
+        ApplicationState.RegisterOnPersisting(PersistData);
         if (BlogName is not null)
         {
-            CurrentBlog ??= await client.GetFromJsonAsync<Blog>($"Api/Blog/GetBlog/{BlogName}");
+            if (!ApplicationState.TryTakeFromJson<Blog>("currentBlog", out CurrentBlog))
+            {
+                CurrentBlog ??= await client.GetFromJsonAsync<Blog>($"Api/Blog/GetBlog/{BlogName}");
+            }
         }
         else
         {
-            BlogSummaries ??= await client.GetFromJsonAsync<HashSet<BlogSummary>>("Api/Blog/GetFeed");
+            if (!ApplicationState.TryTakeFromJson<HashSet<BlogSummary>>("blogSummaries", out BlogSummaries))
+            {
+                BlogSummaries ??= await client.GetFromJsonAsync<HashSet<BlogSummary>>("Api/Blog/GetFeed");
+            }
         }
+    }
+    private Task PersistData()
+    {
+        if (CurrentBlog is not null) ApplicationState.PersistAsJson<Blog>("currentBlog", CurrentBlog);
+        if (BlogSummaries is not null) ApplicationState.PersistAsJson<HashSet<BlogSummary>>("blogSummaries", BlogSummaries);
+        return Task.CompletedTask;
+    }
+    private void GoToBlog(string value)
+    {
+        NavigationManager.NavigateTo($"blogPage/{value}");
     }
 }
