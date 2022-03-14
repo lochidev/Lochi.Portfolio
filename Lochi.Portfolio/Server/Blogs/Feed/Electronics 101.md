@@ -33,7 +33,7 @@ in this blog, please feel free to let me know below (might take a while to get m
 
 ### Basics
 
-<video controls width="750" height="500">
+<video controls width="750" height="500" controls controlsList="nodownload">
     <source src="/api/blog/videoplayback?fileName=basic_electronics_no_audio.mp4"
             type="video/mp4">
 </video>
@@ -50,7 +50,7 @@ His video on switches was very helpful 😁
 
 Alright now it's time for some logic gates! Pretty exciting to make your own &s, |s and ^s 💥🤯
 
-<video controls width="750" height="500">
+<video controls width="750" height="500" controls controlsList="nodownload">
     <source src="/api/blog/videoplayback?fileName=buffer-no-audio.mp4"
             type="video/mp4">
 </video>
@@ -69,7 +69,7 @@ I'm too used to the - -> + flow and it's just a headache to switch so bear with 
 
 ### The inverter
 
-<video controls width="750" height="500">
+<video controls width="750" height="500" controls controlsList="nodownload">
     <source src="/api/blog/videoplayback?fileName=inverter_no_audio.mp4"
             type="video/mp4">
 </video>
@@ -87,7 +87,7 @@ current can flow through the transistor and voltage difference accross the LED i
 
 ### The AND gate
 
-<video controls width="750" height="500">
+<video controls width="750" height="500" controls controlsList="nodownload">
     <source src="/api/blog/videoplayback?fileName=AND_no_audio.mp4"
             type="video/mp4">
 </video>
@@ -107,7 +107,7 @@ connect the transistors in series. You can see this below from the OR circuit be
 
 ### The XOR gate 🤯 (true ^ true => false)
 
-<video controls width="750" height="500">
+<video controls width="750" height="500" controls controlsList="nodownload">
     <source src="/api/blog/videoplayback?fileName=XOR-no-audio.mp4"
             type="video/mp4">
 </video>
