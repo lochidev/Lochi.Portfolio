@@ -52,6 +52,9 @@
 	  <Content Update="wwwroot\images\electronics_101\XOR_incomplete.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
+	  <Content Update="wwwroot\images\GitHub-Mark-Light-64px.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 	<ItemGroup>
